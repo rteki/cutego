@@ -14,8 +14,10 @@ type globalsT struct {
 	QrcRoot string `json:"qrcRoot"`
 	//root path of qt (aka {QT_INSTALL_PATH}/Qt{QT_VERSION}/{QT_VERSION}/${COMPILER_NAME})
 	QtPath string `json:"qtPath"`
-	//intermediate temp path for build
-	TmpPathOpt string `json:"tmpPathOpt"`
+	//QT Tools root path of qt (aka {QT_INSTALL_PATH}/Qt{QT_VERSION}/Tools/${COMPILER_NAME})
+	QtToolsPath string `json:"qtToolsPath"`
+	//Golang compiller root path
+	GoInstallPath string `json:"goInstallPath"`
 	//final build destination path
 	BuildDest string `json:"buildDest"`
 	//name of Go main package
@@ -44,9 +46,9 @@ func readGlobals() globalsT {
 	return g
 }
 
-func wfu() {
+func dbg_wfu() {
 	reader := bufio.NewReader(os.Stdin)
-	fmt.Print("Enter text: ")
+	fmt.Print("Press Enter to continue")
 	reader.ReadString('\n')
 }
 
@@ -57,5 +59,9 @@ func main() {
 
 	TW.ExecInDir(Globals.QrcRoot, "resources.qrc", generateQrc)
 	TW.ExecInDir(".", "CuteGo.pro", generateProfile)
+
+	buildQt("CuteGo.pro")
+	buildGo()
+	deploy()
 
 }

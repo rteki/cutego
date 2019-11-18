@@ -27,12 +27,14 @@
 
 #endif
 
+//Initializing CuteGo object
+EXTERN_C DL int init();
 
 
+#ifdef CUTEGO_LIBRARY
+static CuteGo* instance;
+#endif
 
-EXTERN_C DL void init();
-
-
-
+EXTERN_C DL void start();
 
 #endif // PUBLIC_H

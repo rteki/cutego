@@ -2,7 +2,12 @@
 
 #include <iostream>
 
-void init()
+int init()
 {
-    std::cout << "Hello go!\n";
+    instance = new CuteGo();
+}
+
+void start()
+{
+    instance->start();
 }

@@ -1,32 +1,49 @@
 #include "CuteGo.h"
 
 #include <QResource>
-#include <QtGui/QGuiApplication>
-#include <QtQml/QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QDebug>
 
-CuteGo::CuteGo()
+const QString DEFAULT_RESOURCES_RCC = "./resources.rcc";
+
+CuteGo::CuteGo(GoCallbackFunc gocallback)
 {
+    int argc = 0;
+    char ** argv;
+
+    gc = gocallback;
+
+    app = new QGuiApplication(argc, argv);
+
+    engine = new QQmlApplicationEngine();
+
+    QResource::registerResource(DEFAULT_RESOURCES_RCC);
 }
 
-void CuteGo::setResourcesPath(QString path, QString entry)
+void CuteGo::loadQmlEntry(QString qmlEntry)
 {
-    this->resourcesPath = path;
-    this->entry = entry;
+    engine->load(QUrl("qrc:///" + qmlEntry));
+}
 
-    QResource::registerResource(path);
+void CuteGo::newEventManager(QString name)
+{
+    EventManager * ee = new EventManager(name, gc);
 
+    if(eventEmitters[name]) {
+        delete eventEmitters[name];
+        qDebug() << "Ololo";
+    }
+
+    eventEmitters[name] = ee;
+
+    engine->rootContext()->setContextProperty(name, ee);
 }
 
 void CuteGo::start()
 {
-    int argc;
-    char ** argv;
-
-    QGuiApplication app(argc, argv);
-    QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:///qml/main.qml")));
-
-    app.exec();
+    app->exec();
 }
+
+
 
 

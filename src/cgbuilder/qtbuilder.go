@@ -7,7 +7,7 @@ import (
 	"path"
 )
 
-func generateMakefile(profile string) {
+func generateMakefile() {
 	cmd := exec.Command(
 		path.Join(Globals.QtPath, "bin/qmake.exe"),
 		"-makefile",
@@ -16,10 +16,10 @@ func generateMakefile(profile string) {
 		"-spec",
 		"win32-g++",
 		"\"CONFIG+=qtquickcompiler\"",
-		profile,
+		profilePath,
 	)
 
-	out, err := cmd.Output()
+	out, err := cmd.CombinedOutput()
 
 	fmt.Println(cmd.Args)
 
@@ -37,7 +37,7 @@ func buildDll() {
 		"-j8",
 	)
 
-	out, err := cmd.Output()
+	out, err := cmd.CombinedOutput()
 
 	fmt.Println(cmd.Args)
 
@@ -55,7 +55,7 @@ func cleanArtifacts() {
 		"clean",
 	)
 
-	out, err := cmd.Output()
+	out, err := cmd.CombinedOutput()
 
 	fmt.Println(cmd.Args)
 
@@ -67,8 +67,33 @@ func cleanArtifacts() {
 	}
 }
 
+var profilePath string
+
 func buildQt(profile string) {
-	generateMakefile(profile)
-	buildDll()
-	cleanArtifacts()
+	profilePath = profile
+
+	ExecInDir(Globals.TmpDirPath, generateMakefile)
+	ExecInDir(Globals.TmpDirPath, buildDll)
+	ExecInDir(Globals.TmpDirPath, cleanArtifacts)
+}
+
+func buildResources() {
+	cmd := exec.Command(
+		path.Join(Globals.QtPath, "bin/rcc.exe"),
+		"-binary",
+		path.Join(Globals.QrcRoot, "resources.qrc"),
+		"-o",
+		path.Join(Globals.BuildDest, "resources.rcc"),
+	)
+
+	out, err := cmd.Output()
+
+	fmt.Println(cmd.Args)
+
+	fmt.Println(string(out))
+
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(666)
+	}
 }

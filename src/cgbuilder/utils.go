@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path"
 )
 
 func ExecInDir(path string, callback func()) {
@@ -19,4 +20,21 @@ func ExecInDir(path string, callback func()) {
 	callback()
 
 	os.Chdir(prevdir)
+}
+
+func CreateDir(dirpath string) {
+	if _, err := os.Stat(dirpath); os.IsNotExist(err) {
+		if err = os.Mkdir(dirpath, 0644); err != nil {
+			fmt.Println("Failed to create build destination directory!")
+			fmt.Println(err)
+		}
+	}
+}
+
+func GetAbsPath(current string, destination string) string {
+	if path.IsAbs(destination) {
+		return destination
+	} else {
+		return path.Join(current, destination)
+	}
 }

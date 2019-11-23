@@ -1,8 +1,13 @@
 package main
 
-import "path"
+import (
+	"os"
+	"path"
+)
 
 func generateProfile() string {
+	pwd, _ := os.Getwd()
+
 	profile := ""
 	profile += "QT+=quick gui" + EOL
 	profile += "TEMPLATE = lib" + EOL
@@ -10,18 +15,14 @@ func generateProfile() string {
 	profile += "CONFIG += c++11" + EOL
 	profile += "DEFINES += QT_DEPRECATED_WARNINGS	" + EOL
 	profile += "SOURCES += \\" + EOL
-	profile += "	qt/CuteGo/CuteGo.cpp \\" + EOL
-	profile += "	qt/CuteGo/public.cpp" + EOL
-	profile += "HEADERS += \\" + EOL
-	profile += "	qt/CuteGo/CuteGo.h \\" + EOL
-	profile += "	qt/CuteGo/public.h" + EOL
-	profile += "unix {" + EOL
-	profile += "	target.path = /usr/lib" + EOL
-	profile += "}" + EOL
-	profile += "!isEmpty(target.path): INSTALLS += target" + EOL
 
-	profile += "RESOURCES += \\" + EOL
-	profile += "    " + path.Join(Globals.QrcRoot, "resources.qrc") + EOL
+	profile += "	" + path.Join(pwd, "qt/CuteGo/CuteGo.cpp") + " \\" + EOL
+	profile += "	" + path.Join(pwd, "qt/CuteGo/EventEmitter.cpp") + " \\" + EOL
+	profile += "	" + path.Join(pwd, "qt/CuteGo/public.cpp") + EOL
+	profile += "HEADERS += \\" + EOL
+	profile += "	" + path.Join(pwd, "qt/CuteGo/CuteGo.h") + "\\" + EOL
+	profile += "	" + path.Join(pwd, "qt/CuteGo/EventEmitter.h") + "\\" + EOL
+	profile += "	" + path.Join(pwd, "qt/CuteGo/public.h") + EOL
 
 	return profile
 

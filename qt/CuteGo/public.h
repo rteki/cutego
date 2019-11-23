@@ -27,8 +27,10 @@
 
 #endif
 
+typedef void (*GoCallbackFunc)(const char*, const char*, const char*);
+
 //Initializing CuteGo object
-EXTERN_C DL int init();
+EXTERN_C DL void init(GoCallbackFunc gocallback);
 
 
 #ifdef CUTEGO_LIBRARY
@@ -36,5 +38,7 @@ static CuteGo* instance;
 #endif
 
 EXTERN_C DL void start();
+EXTERN_C DL void loadQmlEntry(char * path);
+EXTERN_C DL void newEventManager(char * name);
 
 #endif // PUBLIC_H

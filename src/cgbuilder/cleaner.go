@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"path"
 )
 
 func rmIfPresent(path string) {
@@ -17,5 +18,11 @@ func rmIfPresent(path string) {
 }
 
 func cleanWorkspace() {
-
+	rmIfPresent(path.Join(Globals.QrcRoot, "resources.qrc"))
+	os.RemoveAll(Globals.TmpDirPath)
 }
+
+func cleanBuildDest() {
+	os.RemoveAll(Globals.BuildDest)
+}
+

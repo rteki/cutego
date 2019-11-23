@@ -4,5 +4,6 @@
     "qtToolsPath": "",
     "goInstallPath": "",
     "buildDest": "",
-    "mainGoName": ""
+    "mainGoName": "",
+    "tmpDirPath": ""
 }

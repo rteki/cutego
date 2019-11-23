@@ -9,7 +9,7 @@ import (
 )
 
 func moveDll() {
-	err := os.Rename("release/CuteGo.dll", path.Join(Globals.BuildDest, "CuteGo.dll"))
+	err := os.Rename(path.Join(Globals.TmpDirPath, "release/CuteGo.dll"), path.Join(Globals.BuildDest, "CuteGo.dll"))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -45,12 +45,7 @@ func winQtDeploy() {
 }
 
 func deploy() {
-	if _, err := os.Stat(Globals.BuildDest); os.IsNotExist(err) {
-		if err = os.Mkdir(Globals.BuildDest, 0644); err != nil {
-			fmt.Println("Failed to create build destination directory!")
-			fmt.Println(err)
-		}
-	}
+	CreateDir(Globals.BuildDest)
 
 	moveDll()
 	moveExe()

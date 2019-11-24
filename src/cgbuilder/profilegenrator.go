@@ -17,11 +17,11 @@ func generateProfile() string {
 	profile += "SOURCES += \\" + EOL
 
 	profile += "	" + path.Join(pwd, "qt/CuteGo/CuteGo.cpp") + " \\" + EOL
-	profile += "	" + path.Join(pwd, "qt/CuteGo/EventEmitter.cpp") + " \\" + EOL
+	profile += "	" + path.Join(pwd, "qt/CuteGo/EventManager.cpp") + " \\" + EOL
 	profile += "	" + path.Join(pwd, "qt/CuteGo/public.cpp") + EOL
 	profile += "HEADERS += \\" + EOL
 	profile += "	" + path.Join(pwd, "qt/CuteGo/CuteGo.h") + "\\" + EOL
-	profile += "	" + path.Join(pwd, "qt/CuteGo/EventEmitter.h") + "\\" + EOL
+	profile += "	" + path.Join(pwd, "qt/CuteGo/EventManager.h") + "\\" + EOL
 	profile += "	" + path.Join(pwd, "qt/CuteGo/public.h") + EOL
 
 	return profile

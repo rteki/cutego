@@ -7,7 +7,7 @@
 #include <QString>
 #include <QMap>
 
-#include "EventEmitter.h"
+#include "EventManager.h"
 
 typedef void (*GoCallbackFunc)(const char*, const char*, const char*);
 

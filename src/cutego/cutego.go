@@ -23,7 +23,9 @@ func qtCall(cEventManagerName *C.char, cEventName *C.char, cValue *C.char) {
 	eventName := C.GoString(cEventName)
 	value := C.GoString(cValue)	
 
-	mapValue := make(map[string]string)
+	fmt.Println(value)
+
+	mapValue := make(map[string]interface{})
 
 	err := json.Unmarshal([]byte(value), &mapValue)
 

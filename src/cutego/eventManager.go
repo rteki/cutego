@@ -3,7 +3,7 @@ package cutego
 
 type EventManager struct {
 	Name string
-	Handlers map[string]func(map[string]string)
+	Handlers map[string]func(map[string]interface{})
 }
 
 
@@ -11,7 +11,7 @@ func NewEventManager(name string) *EventManager {
 	var em *EventManager = new(EventManager)
 	
 	(*em).Name = name
-	(*em).Handlers = make(map[string]func(map[string]string))
+	(*em).Handlers = make(map[string]func(map[string]interface{}))
 
 	newEventManager(name)
 
@@ -20,6 +20,6 @@ func NewEventManager(name string) *EventManager {
 	return em
 }
 
-func (em *EventManager) On(eventName string, handler func(map[string]string)) {
+func (em *EventManager) On(eventName string, handler func(map[string]interface{})) {
 	em.Handlers[eventName] = handler
 }

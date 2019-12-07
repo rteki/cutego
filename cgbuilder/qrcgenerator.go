@@ -22,7 +22,7 @@ func tagFile(name string) string {
 	return "        <file>" + strings.Replace(name, "\\", "/", -1) + "</file>" + EOL
 }
 
-func walkFn(path string, f os.FileInfo, err error) error {
+func resourcesWalk(path string, f os.FileInfo, err error) error {
 	if isRoot {
 		isRoot = false
 		return nil
@@ -35,13 +35,17 @@ func walkFn(path string, f os.FileInfo, err error) error {
 	return nil
 }
 
+func addResources() {
+	filepath.Walk(".", resourcesWalk)
+}
+
 func generateQrc() string {
 
 	qrc += "<RCC>" + EOL
 
 	qrc += tagOpenQres("/")
 
-	filepath.Walk(".", walkFn)
+	ExecInDir(Globals.QrcRoot, addResources)
 
 	qrc += tagCloseQres()
 

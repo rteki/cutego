@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"tmpwriter"
 	"path"
 )
 
+//TODO: add flag to build project with hiding of console
 type globalsT struct {
 	//root path of qml resources
 	QrcRoot string `json:"qrcRoot"`
@@ -28,8 +28,34 @@ type globalsT struct {
 
 //Globals is a main build configuration
 var Globals globalsT
-var TW *tmpwriter.TmpWriter
+
+//TODO: Add to future environment autodetection
 var EOL string = "\r\n"
+
+func generateConfig() {
+	config := ""
+
+	//TODO: Implement environment autodetection
+	config += "{" + EOL
+	config += "  \"//qrcRoot\": \"Path to QML resources root\"," + EOL
+	config += "  \"qrcRoot\": \"\"," + EOL
+	config += "  \"//qtPath\": \"Path to Qt (e.g. C:/Qt/Qt5.13.1/5.13.1/mingw73_64)\"," + EOL
+	config += "  \"qtPath\": \"\"," + EOL
+	config += "  \"//qtToolsPath\": \"Path to Qt Tools (e.g. C:/Qt/Qt5.13.1/Tools/mingw730_64)\"," + EOL
+	config += "  \"qtToolsPath\": \"\"," + EOL
+	config += "  \"//goInstallPath\": \"Path to Go (e.g. C:/Go)\"," + EOL
+	config += "  \"goInstallPath\": \"\"," + EOL
+	config += "  \"//buildDest\": \"Path to building output\"," + EOL
+	config += "  \"buildDest\": \"\"," + EOL
+	config += "  \"//mainGoName\": \"Name of main package entry\"," + EOL
+	config += "  \"mainGoName\": \"\"," + EOL
+	config += "  \"//tmpDirPath\": \"Path to intermediate Qt directory\"," + EOL
+	config += "  \"tmpDirPath\": \"\"" + EOL
+	config += "}" + EOL
+
+	ioutil.WriteFile("cgbuilder_config.json", []byte(config), 0644)
+
+}
 
 func readGlobals() globalsT {
 	var g globalsT
@@ -37,7 +63,9 @@ func readGlobals() globalsT {
 	configFile, err := os.Open("./cgbuilder_config.json")
 
 	if err != nil {
-		fmt.Println(err)
+		generateConfig()
+		fmt.Println("cgbuilder_config.json is generated, please fill it to build your project")
+		os.Exit(0)
 	}
 	defer configFile.Close()
 
@@ -48,14 +76,14 @@ func readGlobals() globalsT {
 	return g
 }
 
-func getFlags() map[string]bool{
-	
-	args := map[string]bool {
-		"res": false,
-		"clean": false,
+func getFlags() map[string]bool {
+
+	args := map[string]bool{
+		"res":      false,
+		"clean":    false,
 		"cleanall": false,
 	}
-	
+
 	for i := 1; i < len(os.Args); i++ {
 		args[os.Args[i]] = true
 	}
@@ -64,20 +92,17 @@ func getFlags() map[string]bool{
 
 }
 
-
-
 func main() {
+	//TODO: Write more readable code for os.Args processing
 	flags := getFlags()
 	Globals = readGlobals()
-	TW = new(tmpwriter.TmpWriter)
-	
+
 	pwd, _ := os.Getwd()
 
 	if !flags["clean"] && !flags["cleanall"] {
 		if !flags["res"] {
 			CreateDir(Globals.TmpDirPath)
-			
-			
+
 			ioutil.WriteFile(path.Join(GetAbsPath(pwd, Globals.TmpDirPath), "CuteGo.pro"), []byte(generateProfile()), 0644)
 
 			buildQt(path.Join(GetAbsPath(pwd, Globals.TmpDirPath), "CuteGo.pro"))
@@ -86,8 +111,9 @@ func main() {
 			deploy()
 		}
 
-		TW.ExecInDir(Globals.QrcRoot, "resources.qrc", generateQrc)
-		
+		rmIfPresent(path.Join(GetAbsPath(pwd, Globals.QrcRoot), "resources.qrc"))
+		ioutil.WriteFile(path.Join(GetAbsPath(pwd, Globals.QrcRoot), "resources.qrc"), []byte(generateQrc()), 0644)
+
 		buildResources()
 
 	} else {
@@ -96,5 +122,5 @@ func main() {
 			cleanBuildDest()
 		}
 	}
-	
+
 }

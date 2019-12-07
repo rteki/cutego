@@ -25,4 +25,3 @@ func cleanWorkspace() {
 func cleanBuildDest() {
 	os.RemoveAll(Globals.BuildDest)
 }
-

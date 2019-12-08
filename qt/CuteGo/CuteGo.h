@@ -18,6 +18,7 @@ public:
     void start();
     void loadQmlEntry(QString qmlEntry);
     void newEventManager(QString name);
+    void call(QString eventManagerName, QString eventName, QString value);
 
 private:
     QGuiApplication *app;

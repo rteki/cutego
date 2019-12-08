@@ -6,6 +6,9 @@
 
 const QString DEFAULT_RESOURCES_RCC = "./resources.rcc";
 
+QJSValue EventManager::jsonParseFunc;
+QJSValue EventManager::jsonStringifyFunc;
+
 CuteGo::CuteGo(GoCallbackFunc gocallback)
 {
     int argc = 0;
@@ -18,6 +21,9 @@ CuteGo::CuteGo(GoCallbackFunc gocallback)
     engine = new QQmlApplicationEngine();
 
     QResource::registerResource(DEFAULT_RESOURCES_RCC);
+
+    EventManager::jsonParseFunc = engine->evaluate("(function(str){return JSON.parse(str);})");
+    EventManager::jsonStringifyFunc = engine->evaluate("(function(obj){return JSON.stringify(obj);})");
 }
 
 void CuteGo::loadQmlEntry(QString qmlEntry)
@@ -27,7 +33,7 @@ void CuteGo::loadQmlEntry(QString qmlEntry)
 
 void CuteGo::newEventManager(QString name)
 {
-    EventManager * ee = new EventManager(name, gc);
+    EventManager * ee = new EventManager(this->engine, name, gc);
 
     if(eventEmitters[name]) {
         delete eventEmitters[name];
@@ -37,6 +43,18 @@ void CuteGo::newEventManager(QString name)
     eventEmitters[name] = ee;
 
     engine->rootContext()->setContextProperty(name, ee);
+}
+
+void CuteGo::call(QString eventManagerName, QString eventName, QString value)
+{
+    EventManager * em = this->eventEmitters[eventManagerName];
+
+    if(!em) {
+        qCritical() << "Can't find event manager called: " << eventManagerName << '\n';
+        return;
+    }
+
+    em->callQml(eventName, value);
 }
 
 void CuteGo::start()

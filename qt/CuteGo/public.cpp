@@ -21,3 +21,8 @@ void newEventManager(char *name)
 {
     instance->newEventManager( QString::fromStdString( std::string(name) ) );
 }
+
+void callQt(char * eventManagerName, char * eventName, char * strValue)
+{
+    instance->call(QString::fromStdString( std::string(eventManagerName) ), QString::fromStdString( std::string(eventName) ), QString::fromStdString( std::string(strValue) ));
+}

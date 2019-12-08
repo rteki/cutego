@@ -40,5 +40,6 @@ static CuteGo* instance;
 EXTERN_C DL void start();
 EXTERN_C DL void loadQmlEntry(char * path);
 EXTERN_C DL void newEventManager(char * name);
+EXTERN_C DL void callQt(char * eventManagerName, char * eventName, char * strValue);
 
 #endif // PUBLIC_H

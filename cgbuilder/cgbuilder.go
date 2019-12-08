@@ -17,7 +17,7 @@ type globalsT struct {
 	//QT Tools root path of qt (aka {QT_INSTALL_PATH}/Qt{QT_VERSION}/Tools/${COMPILER_NAME})
 	QtToolsPath string `json:"qtToolsPath"`
 	//Golang compiller root path
-	GoInstallPath string `json:"goInstallPath"`
+	GoRootPath string `json:"goRootPath"`
 	//final build destination path
 	BuildDest string `json:"buildDest"`
 	//name of Go main package
@@ -29,28 +29,24 @@ type globalsT struct {
 //Globals is a main build configuration
 var Globals globalsT
 
-//TODO: Add to future environment autodetection
-var EOL string = "\r\n"
-
 func generateConfig() {
 	config := ""
 
-	//TODO: Implement environment autodetection
 	config += "{" + EOL
-	config += "  \"//qrcRoot\": \"Path to QML resources root\"," + EOL
-	config += "  \"qrcRoot\": \"\"," + EOL
 	config += "  \"//qtPath\": \"Path to Qt (e.g. C:/Qt/Qt5.13.1/5.13.1/mingw73_64)\"," + EOL
-	config += "  \"qtPath\": \"\"," + EOL
+	config += "  \"qtPath\": \"" + DetectQtPath() + "\"," + EOL + EOL
 	config += "  \"//qtToolsPath\": \"Path to Qt Tools (e.g. C:/Qt/Qt5.13.1/Tools/mingw730_64)\"," + EOL
-	config += "  \"qtToolsPath\": \"\"," + EOL
-	config += "  \"//goInstallPath\": \"Path to Go (e.g. C:/Go)\"," + EOL
-	config += "  \"goInstallPath\": \"\"," + EOL
-	config += "  \"//buildDest\": \"Path to building output\"," + EOL
-	config += "  \"buildDest\": \"\"," + EOL
-	config += "  \"//mainGoName\": \"Name of main package entry\"," + EOL
-	config += "  \"mainGoName\": \"\"," + EOL
+	config += "  \"qtToolsPath\": \"" + DetectQtToolsPath() + "\"," + EOL + EOL
+	config += "  \"//goRootPath\": \"Path to Go (e.g. C:/Go)\"," + EOL
+	config += "  \"goRootPath\": \"" + DetectGoRoot() + "\"," + EOL + EOL + EOL
 	config += "  \"//tmpDirPath\": \"Path to intermediate Qt directory\"," + EOL
-	config += "  \"tmpDirPath\": \"\"" + EOL
+	config += "  \"tmpDirPath\": \"\"," + EOL + EOL
+	config += "  \"//qrcRoot\": \"Path to QML resources root\"," + EOL
+	config += "  \"qrcRoot\": \"\"," + EOL + EOL
+	config += "  \"//mainGoName\": \"Name of main package entry\"," + EOL
+	config += "  \"mainGoName\": \"\"," + EOL + EOL
+	config += "  \"//buildDest\": \"Path to building output\"," + EOL
+	config += "  \"buildDest\": \"\"" + EOL
 	config += "}" + EOL
 
 	ioutil.WriteFile("cgbuilder_config.json", []byte(config), 0644)
@@ -64,7 +60,8 @@ func readGlobals() globalsT {
 
 	if err != nil {
 		generateConfig()
-		fmt.Println("cgbuilder_config.json is generated, please fill it to build your project")
+		fmt.Println("cgbuilder_config.json is generated.")
+		fmt.Println("Please fill manually empty fields or fields which were detected incorrectly!")
 		os.Exit(0)
 	}
 	defer configFile.Close()
@@ -92,10 +89,32 @@ func getFlags() map[string]bool {
 
 }
 
+func checkGlobals() bool {
+	if len(Globals.QrcRoot) > 0 &&
+		len(Globals.QtPath) > 0 &&
+		len(Globals.QtToolsPath) > 0 &&
+		len(Globals.GoRootPath) > 0 &&
+		len(Globals.BuildDest) > 0 &&
+		len(Globals.MainGoName) > 0 &&
+		len(Globals.TmpDirPath) > 0 {
+
+		return true
+	}
+	return false
+}
+
 func main() {
+
+	DetectOS()
+
 	//TODO: Write more readable code for os.Args processing
 	flags := getFlags()
 	Globals = readGlobals()
+
+	if !checkGlobals() {
+		fmt.Println("Please fill cgbuilder_config.json!")
+		os.Exit(0)
+	}
 
 	pwd, _ := os.Getwd()
 

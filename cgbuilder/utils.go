@@ -38,3 +38,11 @@ func GetAbsPath(current string, destination string) string {
 		return path.Join(current, destination)
 	}
 }
+
+func PathExists(path string) bool {
+	if _, err := os.Stat(path); !os.IsNotExist(err) {
+		return true
+	}
+
+	return false
+}

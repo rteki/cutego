@@ -15,7 +15,7 @@ func buildExecutable() {
 	cutegoQtSrcRoot = filepath.Join(filepath.Dir(currentFilePath), "../qt/CuteGo")
 
 	cmd := exec.Command(
-		path.Join(Globals.GoInstallPath, "bin/go.exe"),
+		path.Join(Globals.GoRootPath, "bin/go.exe"),
 		"build",
 		"-x",
 		Globals.MainGoName,

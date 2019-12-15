@@ -17,6 +17,8 @@ func buildExecutable() {
 	cmd := exec.Command(
 		path.Join(Globals.GoRootPath, "bin/go.exe"),
 		"build",
+		"-o",
+		filepath.Join(Globals.BuildDest, filepath.Base(Globals.MainGoName)+".exe"),
 		"-x",
 		Globals.MainGoName,
 	)

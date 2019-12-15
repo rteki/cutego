@@ -15,13 +15,6 @@ func moveDll() {
 	}
 }
 
-func moveExe() {
-	err := os.Rename(Globals.MainGoName+".exe", path.Join(Globals.BuildDest, Globals.MainGoName+".exe"))
-	if err != nil {
-		fmt.Println(err)
-	}
-}
-
 var fullResourcesPath string
 
 func winQtDeploy() {
@@ -48,7 +41,6 @@ func deploy() {
 	CreateDir(Globals.BuildDest)
 
 	moveDll()
-	moveExe()
 
 	localFullResourcesPath, err := filepath.Abs(Globals.QrcRoot)
 	fullResourcesPath = localFullResourcesPath

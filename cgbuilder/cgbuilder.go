@@ -45,7 +45,7 @@ func generateConfig() {
 	config += "  \"qrcRoot\": \"\"," + EOL + EOL
 	config += "  \"//mainGoName\": \"Name of main package entry\"," + EOL
 	config += "  \"mainGoName\": \"\"," + EOL + EOL
-	config += "  \"//buildDest\": \"Path to building output\"," + EOL
+	config += "  \"//buildDest\": \"Path to the build output\"," + EOL
 	config += "  \"buildDest\": \"\"" + EOL
 	config += "}" + EOL
 
@@ -118,6 +118,8 @@ func main() {
 
 	pwd, _ := os.Getwd()
 
+	os.MkdirAll(path.Join(pwd, Globals.BuildDest), os.ModePerm)
+
 	if !flags["clean"] && !flags["cleanall"] {
 		if !flags["res"] {
 			CreateDir(Globals.TmpDirPath)
@@ -128,12 +130,15 @@ func main() {
 
 			buildGo()
 			deploy()
+
 		}
 
 		rmIfPresent(path.Join(GetAbsPath(pwd, Globals.QrcRoot), "resources.qrc"))
 		ioutil.WriteFile(path.Join(GetAbsPath(pwd, Globals.QrcRoot), "resources.qrc"), []byte(generateQrc()), 0644)
 
 		buildResources()
+
+		fmt.Println("\nFinished! :)\n")
 
 	} else {
 		cleanWorkspace()

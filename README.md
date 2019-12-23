@@ -2,7 +2,7 @@
 QML support for Golang
 ## Tested version combinations
 - Windows: 
-  - **Qt5.13.1 (mingw) + Go1.13.3**
+  - **Qt5.13.1 x64 (mingw) + Go1.13.3 x64**
 - Linux: **currently not supported**
 ## Features
 - Display QML application.

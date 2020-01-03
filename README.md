@@ -12,13 +12,13 @@ QML support for Golang
 ## HOWTO Get package
 Just execute the next command in your GOPATH directory:
 ```powershell
-go get github.com/rteki/cutego
+go get github.com/shevby/cutego
 ```
 ## HOWTO Build
 ### Steps
 1. Build **cgbuilder** tool executing the next command in your GOPATH directory:
 ```powershell
-go build github.com/rteki/cutego/cgbuilder
+go build github.com/shevby/cutego/cgbuilder
 ```
 2. Run **cgbuilder** tool. It will try to detect environment which needed to build your project. **cgbuilder_config.json** will be generated. Please fill empty fields. (See project **Project Example** below)
 3. Run **cgbuilder** again to build your project.
@@ -72,10 +72,10 @@ go build github.com/rteki/cutego/cgbuilder
   "tmpDirPath": "qt_tmp",
 
   "//qrcRoot": "Path to QML resources root",
-  "qrcRoot": "src/github.com/rteki/cutego/example/resources",
+  "qrcRoot": "src/github.com/shevby/cutego/example/resources",
 
   "//mainGoName": "Name of main package entry",
-  "mainGoName": "github.com/rteki/cutego/example",
+  "mainGoName": "github.com/shevby/cutego/example",
 
   "//buildDest": "Path to the build output",
   "buildDest": "builds/cutego_example"

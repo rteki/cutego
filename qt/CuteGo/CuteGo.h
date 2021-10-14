@@ -16,9 +16,12 @@ class CuteGo
 public:
     CuteGo(GoCallbackFunc gocallback);
     void start();
+    void registerResource(QString path);
     void loadQmlEntry(QString qmlEntry);
     void newEventManager(QString name);
     void call(QString eventManagerName, QString eventName, QString value);
+
+
 
 private:
     QGuiApplication *app;

@@ -12,6 +12,10 @@ void start()
     instance->start();
 }
 
+void registerResource(char * path) {
+    instance->registerResource(QString::fromStdString( std::string(path) ));
+}
+
 void loadQmlEntry(char *path)
 {
     instance->loadQmlEntry( QString::fromStdString( std::string(path) ) );

@@ -20,10 +20,14 @@ CuteGo::CuteGo(GoCallbackFunc gocallback)
 
     engine = new QQmlApplicationEngine();
 
-    QResource::registerResource(DEFAULT_RESOURCES_RCC);
+
 
     EventManager::jsonParseFunc = engine->evaluate("(function(str){return JSON.parse(str);})");
     EventManager::jsonStringifyFunc = engine->evaluate("(function(obj){return JSON.stringify(obj);})");
+}
+
+void CuteGo::registerResource(QString path) {
+    QResource::registerResource(path);
 }
 
 void CuteGo::loadQmlEntry(QString qmlEntry)

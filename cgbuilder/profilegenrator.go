@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -41,6 +42,15 @@ func addHeaders(path string, f os.FileInfo, err error) error {
 	return nil
 }
 
+func embedResources() {
+
+	profile += "RESOURCES += \\" + EOL
+	abs, _ := filepath.Abs(Globals.QrcRoot)
+	fmt.Println(abs)
+	profile += tab + filepath.Join(abs, "resources.qrc")
+
+}
+
 func generateProfile() string {
 	_, currentFilePath, _, _ := runtime.Caller(0)
 
@@ -64,6 +74,10 @@ func generateProfile() string {
 
 	profile = profile[:len(profile)-4]
 	profile += EOL
+
+	if Globals.EmbedResources {
+		embedResources()
+	}
 
 	return profile
 

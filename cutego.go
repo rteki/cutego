@@ -26,6 +26,12 @@ func Start() bool {
 	return true
 }
 
+func RegisterResource(qrcPath string) bool {
+	cstr := C.CString(qrcPath)
+	C.registerResource(cstr)
+	return true
+}
+
 func LoadQmlEntry(qmlPath string) bool {
 	cstr := C.CString(qmlPath)
 	C.loadQmlEntry(cstr)
